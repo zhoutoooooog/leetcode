@@ -1,0 +1,40 @@
+解题思路：
+关键就是找到一种可逆的对应方法，初步想法是用哈希实现。短码的取值A-Z,a-z，0-9
+
+long_short = {}
+short_long = {}
+letters = string.ascii_letters + string.digits
+class Codec:
+    def encode(self, longUrl):
+        """Encodes a URL to a shortened URL.
+        
+        :type longUrl: str
+        :rtype: str
+        """        
+        def six_addr():
+            ans = ''
+            tmp = ''
+            for i in range(6):
+                tmp = letters[random.randint(0,10000)%62]
+                ans = ans + tmp
+            return ans
+        if longUrl in long_short:
+            return "http://tinyurl.com/" + long_short[longUrl]
+        else:
+            short = six_addr()
+            long_short[longUrl] = short
+            short_long[short] = longUrl
+            return "http://tinyurl.com/" + short
+            
+    def decode(self, shortUrl):
+        """Decodes a shortened URL to its original URL.
+        
+        :type shortUrl: str
+        :rtype: str
+        """
+        short = shortUrl.split('/')[-1]
+        if short in short_long:
+            return short_long[short]
+        else:
+            return None
+        
